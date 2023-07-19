@@ -52,3 +52,5 @@ atlanta-api
 
 *.sh
 atlanta.jar
+/atlanta-api/
+/atlanta-server/
