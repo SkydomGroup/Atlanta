@@ -26,7 +26,7 @@
 ### How to use it?
 
 #### The first method.
-* Download the compiled jar from [Actions](https://Github.com/SkydomGroup/Atlanta/actions/workflows/build.yml).
+* Download the compiled jar from [Actions](https://GitHub.com/SkydomGroup/Atlanta/actions/workflows/build.yml).
 
 #### The second approach.
 * Clone this repo.
@@ -53,7 +53,7 @@
 ### 我该如何使用它？
 
 #### 第一种办法。
-* 到 [Actions](https://github.com/SkydomGroup/Atlanta/actions/workflows/build.yml) 去下载编译好的jar。
+* 到 [Actions](https://GitHub.com/SkydomGroup/Atlanta/actions/workflows/build.yml) 去下载编译好的jar。
 
 #### 第二种办法。
 * 克隆这个存储库。
