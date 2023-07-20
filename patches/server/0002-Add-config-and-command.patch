@@ -1,25 +1,11 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Chosen <haizhongdelan@outlook.com>
-Date: Thu, 20 Jul 2023 13:23:53 +0800
-Subject: [PATCH] Atlanta Config and Command
+Date: Thu, 20 Jul 2023 19:48:58 +0800
+Subject: [PATCH] Add config and command
 
 
-diff --git a/src/main/java/co/aikar/timings/TimingsExport.java b/src/main/java/co/aikar/timings/TimingsExport.java
-index a2f71a6d1a9e98133dff6cd0f625da9435a8af14..3e8d5fa9a3eada2c4ff1342fde1c81b0cca71234 100644
---- a/src/main/java/co/aikar/timings/TimingsExport.java
-+++ b/src/main/java/co/aikar/timings/TimingsExport.java
-@@ -242,7 +242,8 @@ public class TimingsExport extends Thread {
-         parent.put("config", createObject(
-             pair("spigot", mapAsJSON(Bukkit.spigot().getSpigotConfig(), null)),
-             pair("bukkit", mapAsJSON(Bukkit.spigot().getBukkitConfig(), null)),
--            pair("paper", mapAsJSON(Bukkit.spigot().getPaperConfig(), null))
-+            pair("paper", mapAsJSON(Bukkit.spigot().getPaperConfig(), null)),
-+            pair("atlanta", mapAsJSON(Bukkit.spigot().getAtlantaConfig(), null))
-         ));
- 
-         new TimingsExport(listeners, parent, history).start();
 diff --git a/src/main/java/net/minecraft/server/dedicated/DedicatedServer.java b/src/main/java/net/minecraft/server/dedicated/DedicatedServer.java
-index 78ada86028bac06b62a7d70776a29705a3b11a06..615a360dc7e0aa6a3d42c700d3882fcd302193b9 100644
+index 78ada86028bac06b62a7d70776a29705a3b11a06..eeee18df79eea491b878a60704b11af89ce4457a 100644
 --- a/src/main/java/net/minecraft/server/dedicated/DedicatedServer.java
 +++ b/src/main/java/net/minecraft/server/dedicated/DedicatedServer.java
 @@ -218,6 +218,15 @@ public class DedicatedServer extends MinecraftServer implements ServerInterface
@@ -27,7 +13,7 @@ index 78ada86028bac06b62a7d70776a29705a3b11a06..615a360dc7e0aa6a3d42c700d3882fcd
          io.papermc.paper.command.PaperCommands.registerCommands(this);
          com.destroystokyo.paper.Metrics.PaperMetrics.startMetrics();
 +        // Atlanta start
-+        try {
++        try{
 +            org.skydom.chosen.server.AtlantaConfig.init((java.io.File) options.valueOf("atlanta-settings"));
 +        } catch (Exception e) {
 +            DedicatedServer.LOGGER.error("Unable to load server configuration", e);
@@ -39,14 +25,14 @@ index 78ada86028bac06b62a7d70776a29705a3b11a06..615a360dc7e0aa6a3d42c700d3882fcd
          io.papermc.paper.brigadier.PaperBrigadierProviderImpl.INSTANCE.getClass(); // init PaperBrigadierProvider
          // Paper end
 diff --git a/src/main/java/net/minecraft/world/level/Level.java b/src/main/java/net/minecraft/world/level/Level.java
-index 8cf4428d8140fd03f0ad8fa1d148a04d8caefda8..b5c0e37743b394bbdb934b915f57cdb4fa8daaa9 100644
+index 8cf4428d8140fd03f0ad8fa1d148a04d8caefda8..5bf7a411632a859b4bf4fce2bd2d821e3fe2ee90 100644
 --- a/src/main/java/net/minecraft/world/level/Level.java
 +++ b/src/main/java/net/minecraft/world/level/Level.java
 @@ -166,6 +166,7 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
      // Paper end
  
      public final com.destroystokyo.paper.antixray.ChunkPacketBlockController chunkPacketBlockController; // Paper - Anti-Xray
-+    public final org.skydom.chosen.server.AtlantaWorldConfig AtlantaConfig; // Atlanta
++    public final org.skydom.chosen.server.AtlantaWorldConfig atlantaConfig; // Atlanta
      public final co.aikar.timings.WorldTimingsHandler timings; // Paper
      public static BlockPos lastPhysicsProblem; // Spigot
      private org.spigotmc.TickLimiter entityLimiter;
@@ -54,15 +40,23 @@ index 8cf4428d8140fd03f0ad8fa1d148a04d8caefda8..b5c0e37743b394bbdb934b915f57cdb4
      protected Level(WritableLevelData worlddatamutable, ResourceKey<Level> resourcekey, RegistryAccess iregistrycustom, Holder<DimensionType> holder, Supplier<ProfilerFiller> supplier, boolean flag, boolean flag1, long i, int j, org.bukkit.generator.ChunkGenerator gen, org.bukkit.generator.BiomeProvider biomeProvider, org.bukkit.World.Environment env, java.util.function.Function<org.spigotmc.SpigotWorldConfig, io.papermc.paper.configuration.WorldConfiguration> paperWorldConfigCreator, java.util.concurrent.Executor executor) { // Paper - Async-Anti-Xray - Pass executor
          this.spigotConfig = new org.spigotmc.SpigotWorldConfig(((net.minecraft.world.level.storage.PrimaryLevelData) worlddatamutable).getLevelName()); // Spigot
          this.paperConfig = paperWorldConfigCreator.apply(this.spigotConfig); // Paper
-+        this.AtlantaConfig = new org.skydom.chosen.server.AtlantaWorldConfig(((net.minecraft.world.level.storage.PrimaryLevelData) worlddatamutable).getLevelName(), env); // Atlanta
++        this.atlantaConfig = new org.skydom.chosen.server.AtlantaWorldConfig(((net.minecraft.world.level.storage.PrimaryLevelData) worlddatamutable).getLevelName(), env);
          this.generator = gen;
          this.world = new CraftWorld((ServerLevel) this, gen, biomeProvider, env);
  
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-index 70757678f9300368a18926702c6d11be848c1423..d346e1396dc925e61cd7a899b15ce9e6f0cbfbd6 100644
+index 70757678f9300368a18926702c6d11be848c1423..f4c2dcc41f2d5a10700a5efe152204b94559c4c6 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-@@ -1097,6 +1097,7 @@ public final class CraftServer implements Server {
+@@ -253,6 +253,7 @@ import org.bukkit.scoreboard.Criteria;
+ import org.bukkit.structure.StructureManager;
+ import org.bukkit.util.StringUtil;
+ import org.bukkit.util.permissions.DefaultPermissions;
++import org.skydom.chosen.server.AtlantaConfig;
+ import org.yaml.snakeyaml.LoaderOptions;
+ import org.yaml.snakeyaml.Yaml;
+ import org.yaml.snakeyaml.constructor.SafeConstructor;
+@@ -1097,6 +1098,7 @@ public final class CraftServer implements Server {
  
          org.spigotmc.SpigotConfig.init((File) console.options.valueOf("spigot-settings")); // Spigot
          this.console.paperConfigurations.reloadConfigs(this.console);
@@ -70,15 +64,15 @@ index 70757678f9300368a18926702c6d11be848c1423..d346e1396dc925e61cd7a899b15ce9e6
          for (ServerLevel world : this.console.getAllLevels()) {
              // world.serverLevelData.setDifficulty(config.difficulty); // Paper - per level difficulty
              world.setSpawnSettings(world.serverLevelData.getDifficulty() != Difficulty.PEACEFUL && config.spawnMonsters, config.spawnAnimals); // Paper - per level difficulty (from MinecraftServer#setDifficulty(ServerLevel, Difficulty, boolean))
-@@ -1112,6 +1113,7 @@ public final class CraftServer implements Server {
+@@ -1112,6 +1114,7 @@ public final class CraftServer implements Server {
                  }
              }
              world.spigotConfig.init(); // Spigot
-+            world.AtlantaConfig.init(); // Atlanta
++            world.atlantaConfig.init(); // Atlanta
          }
  
          Plugin[] pluginClone = pluginManager.getPlugins().clone(); // Paper
-@@ -1127,6 +1129,7 @@ public final class CraftServer implements Server {
+@@ -1127,6 +1130,7 @@ public final class CraftServer implements Server {
          this.reloadData();
          org.spigotmc.SpigotConfig.registerCommands(); // Spigot
          io.papermc.paper.command.PaperCommands.registerCommands(this.console); // Paper
@@ -86,14 +80,15 @@ index 70757678f9300368a18926702c6d11be848c1423..d346e1396dc925e61cd7a899b15ce9e6
          this.overrideAllCommandBlockCommands = this.commandsConfiguration.getStringList("command-block-overrides").contains("*");
          this.ignoreVanillaPermissions = this.commandsConfiguration.getBoolean("ignore-vanilla-permissions");
  
-@@ -2907,6 +2910,13 @@ public final class CraftServer implements Server {
+@@ -2907,6 +2911,14 @@ public final class CraftServer implements Server {
              return CraftServer.this.console.paperConfigurations.createLegacyObject(CraftServer.this.console);
          }
  
 +        // Atlanta start
 +        @Override
-+        public YamlConfiguration getAtlantaConfig() {
-+            return org.skydom.chosen.server.AtlantaConfig.config;
++        public  YamlConfiguration getAtlantaConfig()
++        {
++            return AtlantaConfig.config;
 +        }
 +        // Atlanta end
 +
@@ -101,14 +96,14 @@ index 70757678f9300368a18926702c6d11be848c1423..d346e1396dc925e61cd7a899b15ce9e6
          public void restart() {
              org.spigotmc.RestartCommand.restart();
 diff --git a/src/main/java/org/bukkit/craftbukkit/Main.java b/src/main/java/org/bukkit/craftbukkit/Main.java
-index daed278d1bcf84ee42749f24e311b22b70015d79..3c087ccef686e4baf4db642d87108cfcb08e0f53 100644
+index daed278d1bcf84ee42749f24e311b22b70015d79..6ed1878f0812e41684c2d0b5bbcbacad65f7ec3c 100644
 --- a/src/main/java/org/bukkit/craftbukkit/Main.java
 +++ b/src/main/java/org/bukkit/craftbukkit/Main.java
 @@ -173,6 +173,14 @@ public class Main {
                          .describedAs("Jar file");
                  // Paper end
  
-+                // Atlanta Start
++                // Atlanta start
 +                acceptsAll(asList("atlanta", "atlanta-settings"), "File for atlanta settings")
 +                    .withRequiredArg()
 +                    .ofType(File.class)
@@ -121,10 +116,10 @@ index daed278d1bcf84ee42749f24e311b22b70015d79..3c087ccef686e4baf4db642d87108cfc
                          .withRequiredArg()
 diff --git a/src/main/java/org/skydom/chosen/server/AtlantaConfig.java b/src/main/java/org/skydom/chosen/server/AtlantaConfig.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..d7b36de0f5bf8e024d062afa3b7c8c0378329d10
+index 0000000000000000000000000000000000000000..8a47943c658a4e5a8794a65ee2dfbcefabc7bd2c
 --- /dev/null
 +++ b/src/main/java/org/skydom/chosen/server/AtlantaConfig.java
-@@ -0,0 +1,192 @@
+@@ -0,0 +1,191 @@
 +package org.skydom.chosen.server;
 +
 +import com.google.common.base.Throwables;
@@ -142,7 +137,6 @@ index 0000000000000000000000000000000000000000..d7b36de0f5bf8e024d062afa3b7c8c03
 +import java.lang.reflect.InvocationTargetException;
 +import java.lang.reflect.Method;
 +import java.lang.reflect.Modifier;
-+import java.util.Arrays;
 +import java.util.HashMap;
 +import java.util.List;
 +import java.util.Map;
@@ -150,8 +144,8 @@ index 0000000000000000000000000000000000000000..d7b36de0f5bf8e024d062afa3b7c8c03
 +
 +@SuppressWarnings("unused")
 +public class AtlantaConfig {
-+    protected static final String HEADER = "This is the main configuration file for Atlanta.\n" ;
-+        // + "";
++    protected static final String HEADER = "This is the main configuration file for Atlanta.\n";
++        // + "*.\n"
 +    protected static File CONFIG_FILE;
 +    public static YamlConfiguration config;
 +
@@ -448,7 +442,7 @@ index 0000000000000000000000000000000000000000..e50eeeffd3e6ba608166e10dddaf7dc4
 +}
 diff --git a/src/main/java/org/skydom/chosen/server/command/AtlantaCommand.java b/src/main/java/org/skydom/chosen/server/command/AtlantaCommand.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..070c6f75e0f0a7d516ddde40522bb3a3e728b76c
+index 0000000000000000000000000000000000000000..0451b22054e541d57aed0c1d4924bfbed2572815
 --- /dev/null
 +++ b/src/main/java/org/skydom/chosen/server/command/AtlantaCommand.java
 @@ -0,0 +1,65 @@
@@ -500,13 +494,13 @@ index 0000000000000000000000000000000000000000..070c6f75e0f0a7d516ddde40522bb3a3
 +            Command.broadcastCommandMessage(sender, ChatColor.RED + "If you encounter any issues please use the /stop command to restart your server.");
 +
 +            MinecraftServer console = MinecraftServer.getServer();
-+            AtlantaConfig.reload((File) console.options.valueOf("atlanta-settings"));
++            AtlantaConfig.reload((File) console.options.valueOf("kaiiju-settings"));
 +            for (ServerLevel level : console.getAllLevels()) {
-+                level.AtlantaConfig.reload();
++                level.atlantaConfig.reload();
 +            }
 +            console.server.reloadCount++;
 +
-+            Command.broadcastCommandMessage(sender, ChatColor.GREEN + "Atlanta config reload complete.");
++            Command.broadcastCommandMessage(sender, ChatColor.GREEN + "Kaiiju config reload complete.");
 +        } else if (args[0].equalsIgnoreCase("version")) {
 +            Command verCmd = org.bukkit.Bukkit.getServer().getCommandMap().getCommand("version");
 +            if (verCmd != null) {

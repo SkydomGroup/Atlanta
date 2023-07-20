@@ -1,11 +1,11 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Chosen <haizhongdelan@outlook.com>
-Date: Thu, 20 Jul 2023 14:04:57 +0800
+Date: Thu, 20 Jul 2023 19:59:12 +0800
 Subject: [PATCH] Toggle sand duplication
 
 
 diff --git a/src/main/java/net/minecraft/world/entity/item/FallingBlockEntity.java b/src/main/java/net/minecraft/world/entity/item/FallingBlockEntity.java
-index 34b3541603b8cca16c7d62f3981d7ce3e8be0dbe..e61aed30fc80fe21d3dfeeb808c01d02dfc21d90 100644
+index 34b3541603b8cca16c7d62f3981d7ce3e8be0dbe..183619242765efd25b0cf3c1f217d80cf9a3f043 100644
 --- a/src/main/java/net/minecraft/world/entity/item/FallingBlockEntity.java
 +++ b/src/main/java/net/minecraft/world/entity/item/FallingBlockEntity.java
 @@ -133,7 +133,7 @@ public class FallingBlockEntity extends Entity {
@@ -13,7 +13,7 @@ index 34b3541603b8cca16c7d62f3981d7ce3e8be0dbe..e61aed30fc80fe21d3dfeeb808c01d02
      public void tick() {
          // Paper start - fix sand duping
 -        if (this.isRemoved()) {
-+        if (!this.level().AtlantaConfig.sandDuplication && this.isRemoved()) { // Atlanta - Configurable sand duping
++        if (!this.level().atlantaConfig.sandDuplication && this.isRemoved()) { // Atlanta - Toggle sand duplication
              return;
          }
          // Paper end - fix sand duping
@@ -22,28 +22,22 @@ index 34b3541603b8cca16c7d62f3981d7ce3e8be0dbe..e61aed30fc80fe21d3dfeeb808c01d02
  
              // Paper start - fix sand duping
 -            if (this.isRemoved()) {
-+            if (!this.level().AtlantaConfig.sandDuplication && this.isRemoved()) { // Atlanta - Configurable sand duping
++            if (!this.level().atlantaConfig.sandDuplication && this.isRemoved()) { // Atlanta - Toggle sand duplication
                  return;
              }
              // Paper end - fix sand duping
 diff --git a/src/main/java/org/skydom/chosen/server/AtlantaWorldConfig.java b/src/main/java/org/skydom/chosen/server/AtlantaWorldConfig.java
-index e50eeeffd3e6ba608166e10dddaf7dc4dc54eb6a..d637dbd265cf028f70d3c06986190cc1008e2279 100644
+index e50eeeffd3e6ba608166e10dddaf7dc4dc54eb6a..bd1a89daceeaa62e74c741b04c787ffc2cff3042 100644
 --- a/src/main/java/org/skydom/chosen/server/AtlantaWorldConfig.java
 +++ b/src/main/java/org/skydom/chosen/server/AtlantaWorldConfig.java
-@@ -13,6 +13,7 @@ public class AtlantaWorldConfig {
- 
-     private final String worldName;
-     private final World.Environment environment;
-+    public boolean sandDuplication = false;
- 
-     public AtlantaWorldConfig(String worldName, World.Environment environment) {
-         this.worldName = worldName;
-@@ -120,4 +121,8 @@ public class AtlantaWorldConfig {
+@@ -120,4 +120,10 @@ public class AtlantaWorldConfig {
          final Map<String, Object> value = getMap("world-settings." + worldName + "." + path, null);
          return value.isEmpty() ? fallback : value;
      }
 +
-+    private void gameplaySettings() {
-+        sandDuplication = getBoolean("fix.sand-duplication", sandDuplication);
++    public boolean sandDuplication = false;
++
++    private void FixSettings() {
++        sandDuplication = getBoolean("Fix.Enable-sand-duplication", sandDuplication);
 +    }
  }
