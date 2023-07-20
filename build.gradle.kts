@@ -57,12 +57,12 @@ paperweight {
     remapRepo.set(paperMavenPublicUrl)
     decompileRepo.set(paperMavenPublicUrl)
 
-    useStandardUpstream("Folia") {
-        url.set(github("PaperMC", "Folia"))
-        ref.set(providers.gradleProperty("foliaRef"))
+    useStandardUpstream("Kaiiju") {
+        url.set(github("KaiijuMC", "Kaiiju"))
+        ref.set(providers.gradleProperty("kaiijuRef"))
 
         withStandardPatcher {
-            baseName("Folia")
+            baseName("Kaiiju")
 
             apiPatchDir.set(layout.projectDirectory.dir("patches/api"))
             apiOutputDir.set(layout.projectDirectory.dir("atlanta-api"))
@@ -73,9 +73,8 @@ paperweight {
     }
 }
 
-tasks.register("FoliaRefLatest") {
-    // Update the foliaRef in gradle.properties to be the latest commit.
-    val tempDir = layout.cacheDir("FoliaRefLatest");
+tasks.register("KaiijuRefLatest") {
+    val tempDir = layout.cacheDir("KaiijuRefLatest");
     val file = "gradle.properties";
 
     doFirst {
@@ -83,15 +82,15 @@ tasks.register("FoliaRefLatest") {
             val sha: String
         )
 
-        val FoliaLatestCommitJson = layout.cache.resolve("FoliaLatestCommit.json");
-        download.get().download("https://api.github.com/repos/PaperMC/Folia/commits/master", FoliaLatestCommitJson);
-        val FoliaLatestCommit = gson.fromJson<paper.libs.com.google.gson.JsonObject>(FoliaLatestCommitJson)["sha"].asString;
+        val KaiijuLatestCommitJson = layout.cache.resolve("KaiijuLatestCommit.json");
+        download.get().download("https://api.github.com/repos/KaiijuMC/Kaiiju/commits/ver/1.20.1", KaiijuLatestCommitJson);
+        val KaiijuLatestCommit = gson.fromJson<paper.libs.com.google.gson.JsonObject>(KaiijuLatestCommitJson)["sha"].asString;
 
         copy {
             from(file)
             into(tempDir)
             filter { line: String ->
-                line.replace("foliaRef=.*".toRegex(), "foliaRef=$FoliaLatestCommit")
+                line.replace("kaiijuRef=.*".toRegex(), "kaiijuRef=$KaiijuLatestCommit")
             }
         }
     }

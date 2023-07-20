@@ -38,7 +38,7 @@ jobs:
                   git config --global user.name "Github Actions"
                   chmod 777 gradlew
                   ./gradlew clean --stacktrace
-                  ./gradlew FoliaRefLatest --stacktrace
+                  ./gradlew KaiijuRefLatest --stacktrace
                   ./gradlew applyPatches --stacktrace
                   ./gradlew createReobfPaperclipJar --stacktrace
             - uses: actions/upload-artifact@v3
