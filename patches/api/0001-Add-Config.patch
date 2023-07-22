@@ -1,0 +1,25 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Chosen <haizhongdelan@outlook.com>
+Date: Sat, 22 Jul 2023 23:24:32 +0800
+Subject: [PATCH] Add Config
+
+
+diff --git a/src/main/java/org/bukkit/Server.java b/src/main/java/org/bukkit/Server.java
+index 57d4789c1eb00cb376adce31ece2b6672c4a12a9..47c02efc559b0a5c84a8d77391ae21d673229c31 100644
+--- a/src/main/java/org/bukkit/Server.java
++++ b/src/main/java/org/bukkit/Server.java
+@@ -2028,6 +2028,14 @@ public interface Server extends PluginMessageRecipient, net.kyori.adventure.audi
+         {
+             throw new UnsupportedOperationException("Not supported yet.");
+         }
++
++        // Atlanta start
++        @NotNull
++        public org.bukkit.configuration.file.YamlConfiguration getAtlantaConfig()
++        {
++            throw new UnsupportedOperationException("Not supported yet.");
++        }
++        // Atlanta end
+         // Paper end
+ 
+         /**

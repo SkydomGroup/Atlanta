@@ -1,56 +1,73 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Chosen <haizhongdelan@outlook.com>
-Date: Thu, 20 Jul 2023 21:30:28 +0800
+Date: Sat, 22 Jul 2023 22:54:19 +0800
 Subject: [PATCH] Build changes
 
 
 diff --git a/build.gradle.kts b/build.gradle.kts
-index 30da22816eecfce179d365fa4de2b979438a302a..fefa895a7769c198134451fc7d2ea4ea54af38e2 100644
+index 93f9abd2169a48a4fd32f712c68be7b49b034e83..5434e65d5c5fb93d01f8d8cb9d610453de0c9588 100644
 --- a/build.gradle.kts
 +++ b/build.gradle.kts
-@@ -14,8 +14,8 @@ val alsoShade: Configuration by configurations.creating
+@@ -14,10 +14,12 @@ val alsoShade: Configuration by configurations.creating
  
  dependencies {
      // Folia start
--    implementation(project(":kaiiju-api")) // Kaiiju
+-    implementation(project(":folia-api"))
 -    implementation("io.papermc.paper:paper-mojangapi:1.19.3-R0.1-SNAPSHOT") {
-+    implementation(project(":atlanta-api")) // Kaiiju // Atlanta
++    // Atlanta start
++    implementation(project(":atlanta-api"))
 +    implementation("io.papermc.paper:paper-mojangapi:1.20.1-R0.1-SNAPSHOT") {
          exclude("io.papermc.paper", "paper-api")
      }
++    // Atlanta end
      // Folia end
-@@ -87,7 +87,7 @@ tasks.jar {
+     // Paper start
+     implementation("org.jline:jline-terminal-jansi:3.21.0")
+@@ -76,7 +78,7 @@ tasks.jar {
          attributes(
              "Main-Class" to "org.bukkit.craftbukkit.Main",
              "Implementation-Title" to "CraftBukkit",
--            "Implementation-Version" to "git-Kaiiju-$implementationVersion", // Folia // Kaiiju
-+            "Implementation-Version" to "git-Atlanta-$implementationVersion", // Folia // Kaiiju // Atlanta
+-            "Implementation-Version" to "git-Folia-$implementationVersion", // Folia
++            "Implementation-Version" to "git-Atlanta-$implementationVersion", // Atlanta // Folia
              "Implementation-Vendor" to date, // Paper
              "Specification-Title" to "Bukkit",
              "Specification-Version" to project.version,
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
-index 5168d16b7e9ed08bdedd0e386f9671a63b6859be..01901cfba63bf6deb0a5336191497b5357fd674a 100644
+index 355acd1dd3b2e9f2a086a8d95928cdebbf63d06f..9c3a82c42074049579867742dce11107420996c6 100644
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java
 +++ b/src/main/java/net/minecraft/server/MinecraftServer.java
 @@ -1812,7 +1812,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
  
      @DontObfuscate
      public String getServerModName() {
--        return dev.kaiijumc.kaiiju.KaiijuConfig.serverModName; // Kaiiju - Kaiiju > // Folia - Folia > // Paper - Paper > // Spigot - Spigot > // CraftBukkit - cb > vanilla!
-+        return "Atlanta"; // Atlanta - Atlanta // Kaiiju - Kaiiju > // Folia - Folia > // Paper - Paper > // Spigot - Spigot > // CraftBukkit - cb > vanilla!
+-        return "Folia"; // Folia - Folia > // Paper - Paper > // Spigot - Spigot > // CraftBukkit - cb > vanilla!
++        return "Atlanta"; // Atlanta - Atlanta > // Folia - Folia > // Paper - Paper > // Spigot - Spigot > // CraftBukkit - cb > vanilla!
      }
  
      public SystemReport fillSystemReport(SystemReport details) {
+diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
+index 23556931a812ed9b2dac5b4b4712961c2d9aa025..70757678f9300368a18926702c6d11be848c1423 100644
+--- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
++++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
+@@ -264,7 +264,7 @@ import javax.annotation.Nullable; // Paper
+ import javax.annotation.Nonnull; // Paper
+ 
+ public final class CraftServer implements Server {
+-    private final String serverName = "Folia"; // Folia // Paper
++    private final String serverName = "Atlanta"; // Atlanta // Folia // Paper
+     private final String serverVersion;
+     private final String bukkitVersion = Versioning.getBukkitVersion();
+     private final Logger logger = Logger.getLogger("Minecraft");
 diff --git a/src/main/java/org/bukkit/craftbukkit/util/Versioning.java b/src/main/java/org/bukkit/craftbukkit/util/Versioning.java
-index 5df2b0fceebaaa863f4f143c8f29e808b7f0c49b..a606e9788121d9daeba23930187b1edbf571e3b8 100644
+index e9b6ca3aa25e140467ae866d572483050ea3fa0e..b3393824f4f25eac66d1b1eb835d0b6434582f33 100644
 --- a/src/main/java/org/bukkit/craftbukkit/util/Versioning.java
 +++ b/src/main/java/org/bukkit/craftbukkit/util/Versioning.java
 @@ -11,7 +11,7 @@ public final class Versioning {
      public static String getBukkitVersion() {
          String result = "Unknown-Version";
  
--        InputStream stream = Bukkit.class.getClassLoader().getResourceAsStream("META-INF/maven/dev.kaiijumc.kaiiju/kaiiju-api/pom.properties"); // Folia // Kaiiju
-+        InputStream stream = Bukkit.class.getClassLoader().getResourceAsStream("META-INF/maven/org.skydom.chosen.server/atlanta-api/pom.properties"); // Folia // Kaiiju // Atlanta
+-        InputStream stream = Bukkit.class.getClassLoader().getResourceAsStream("META-INF/maven/dev.folia/folia-api/pom.properties"); // Folia
++        InputStream stream = Bukkit.class.getClassLoader().getResourceAsStream("META-INF/maven/org.skydom.chosen.server/atlanta-api/pom.properties"); // Atlanta // Folia
          Properties properties = new Properties();
  
          if (stream != null) {

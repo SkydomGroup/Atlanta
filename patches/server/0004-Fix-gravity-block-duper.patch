@@ -1,0 +1,48 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Chosen <haizhongdelan@outlook.com>
+Date: Sat, 22 Jul 2023 23:42:39 +0800
+Subject: [PATCH] Fix gravity block duper
+
+
+diff --git a/src/main/java/net/minecraft/world/entity/item/FallingBlockEntity.java b/src/main/java/net/minecraft/world/entity/item/FallingBlockEntity.java
+index 34b3541603b8cca16c7d62f3981d7ce3e8be0dbe..5fac67b54f4ad0f898d1fbe0a39fd19ff58b0875 100644
+--- a/src/main/java/net/minecraft/world/entity/item/FallingBlockEntity.java
++++ b/src/main/java/net/minecraft/world/entity/item/FallingBlockEntity.java
+@@ -133,8 +133,10 @@ public class FallingBlockEntity extends Entity {
+     @Override
+     public void tick() {
+         // Paper start - fix sand duping
+-        if (this.isRemoved()) {
++        // Atlanta start - Fix gravity block duper
++        if (!this.level().atlantaConfig.gravityblockDuper && this.isRemoved()) { // 配置文件中"gravityblockDuper"，设置为true，则不执行此代码，即开启重力方块复制。
+             return;
++        // Atlanta end - Fix gravity block duper
+         }
+         // Paper end - fix sand duping
+         if (this.blockState.isAir()) {
+@@ -150,7 +152,9 @@ public class FallingBlockEntity extends Entity {
+             this.move(MoverType.SELF, this.getDeltaMovement());
+ 
+             // Paper start - fix sand duping
+-            if (this.isRemoved()) {
++            // Atlanta start - Fix gravity block duper
++            if (!this.level().atlantaConfig.gravityblockDuper && this.isRemoved()) { // 配置文件中"gravityblockDuper"，设置为true，则不执行此代码，即开启重力方块复制。
++            // Atlanta end - Fix gravity block duper
+                 return;
+             }
+             // Paper end - fix sand duping
+diff --git a/src/main/java/org/skydom/chosen/server/AtlantaWorldConfig.java b/src/main/java/org/skydom/chosen/server/AtlantaWorldConfig.java
+index 9447d8efece67e6c969d8fbaf111a9b29f249058..c383527124b24ea63538bca99ecde46f6fa7d63d 100644
+--- a/src/main/java/org/skydom/chosen/server/AtlantaWorldConfig.java
++++ b/src/main/java/org/skydom/chosen/server/AtlantaWorldConfig.java
+@@ -122,8 +122,10 @@ public class AtlantaWorldConfig {
+     }
+ 
+     public boolean safeTeleporting = true;
++    public boolean gravityblockDuper = false;
+ 
+     private void gameplaySettings() {
+         safeTeleporting = getBoolean("settings.safe-teleportation", safeTeleporting);
++        gravityblockDuper = getBoolean("settings.gravity-block-Duper",gravityblockDuper);
+     }
+ }

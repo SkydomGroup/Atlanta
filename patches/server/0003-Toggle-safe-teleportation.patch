@@ -1,0 +1,55 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Chosen <haizhongdelan@outlook.com>
+Date: Sat, 22 Jul 2023 23:34:34 +0800
+Subject: [PATCH] Toggle safe teleportation
+
+
+diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
+index ee15661227754149164893d6acf678d13b2e1b27..2d3be8e07147be9a00ff2f27eb08329995e37bd2 100644
+--- a/src/main/java/net/minecraft/world/entity/Entity.java
++++ b/src/main/java/net/minecraft/world/entity/Entity.java
+@@ -3938,6 +3938,11 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
+ 
+     protected boolean tryEndPortal() {
+         io.papermc.paper.util.TickThread.ensureTickThread(this, "Cannot portal entity async");
++        // Atlanta start
++        if (!this.level.atlantaConfig.safeTeleporting && !(this instanceof net.minecraft.world.entity.player.Player)) { // 配置文件中"safeTeleporting"，设置为 false，则执行此代码。
++            return false;
++        }
++        // Atlanta end
+         BlockPos pos = this.portalBlock;
+         ServerLevel world = this.portalWorld;
+         this.portalBlock = null;
+diff --git a/src/main/java/net/minecraft/world/level/block/EndPortalBlock.java b/src/main/java/net/minecraft/world/level/block/EndPortalBlock.java
+index 41d7cff39fc37955877668337689b4b26cd8c7cf..b164a5ba12b36281b05b5807e7a8cf9c3343ed00 100644
+--- a/src/main/java/net/minecraft/world/level/block/EndPortalBlock.java
++++ b/src/main/java/net/minecraft/world/level/block/EndPortalBlock.java
+@@ -53,6 +53,13 @@ public class EndPortalBlock extends BaseEntityBlock {
+                 // return; // CraftBukkit - always fire event in case plugins wish to change it
+             }
+ 
++            // Atlanta start - Unsafe teleportation
++            if (!entity.level().atlantaConfig.safeTeleporting && !(entity instanceof net.minecraft.world.entity.player.Player)) { // 配置文件中"safeTeleporting"，设置为 false，则执行此代码。
++                entity.endPortalLogicAsync();
++                return;
++            }
++            // Atlanta end - Unsafe teleportation
++
+             // Paper start - move all of this logic into portal tick
+             entity.portalWorld = ((ServerLevel)world);
+             entity.portalBlock = pos.immutable();
+diff --git a/src/main/java/org/skydom/chosen/server/AtlantaWorldConfig.java b/src/main/java/org/skydom/chosen/server/AtlantaWorldConfig.java
+index e50eeeffd3e6ba608166e10dddaf7dc4dc54eb6a..9447d8efece67e6c969d8fbaf111a9b29f249058 100644
+--- a/src/main/java/org/skydom/chosen/server/AtlantaWorldConfig.java
++++ b/src/main/java/org/skydom/chosen/server/AtlantaWorldConfig.java
+@@ -120,4 +120,10 @@ public class AtlantaWorldConfig {
+         final Map<String, Object> value = getMap("world-settings." + worldName + "." + path, null);
+         return value.isEmpty() ? fallback : value;
+     }
++
++    public boolean safeTeleporting = true;
++
++    private void gameplaySettings() {
++        safeTeleporting = getBoolean("settings.safe-teleportation", safeTeleporting);
++    }
+ }

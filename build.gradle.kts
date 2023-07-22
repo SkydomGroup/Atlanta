@@ -57,12 +57,12 @@ paperweight {
     remapRepo.set(paperMavenPublicUrl)
     decompileRepo.set(paperMavenPublicUrl)
 
-    useStandardUpstream("Kaiiju") {
-        url.set(github("KaiijuMC", "Kaiiju"))
-        ref.set(providers.gradleProperty("kaiijuRef"))
+    useStandardUpstream("Folia") {
+        url.set(github("PaperMC", "Folia"))
+        ref.set(providers.gradleProperty("FoliaRef"))
 
         withStandardPatcher {
-            baseName("Kaiiju")
+            baseName("Folia")
 
             apiPatchDir.set(layout.projectDirectory.dir("patches/api"))
             apiOutputDir.set(layout.projectDirectory.dir("atlanta-api"))
@@ -73,8 +73,8 @@ paperweight {
     }
 }
 
-tasks.register("KaiijuRefLatest") {
-    val tempDir = layout.cacheDir("KaiijuRefLatest");
+tasks.register("FoliaRefLatest") {
+    val tempDir = layout.cacheDir("FoliaRefLatest");
     val file = "gradle.properties";
 
     doFirst {
@@ -82,15 +82,15 @@ tasks.register("KaiijuRefLatest") {
             val sha: String
         )
 
-        val KaiijuLatestCommitJson = layout.cache.resolve("KaiijuLatestCommit.json");
-        download.get().download("https://api.github.com/repos/KaiijuMC/Kaiiju/commits/ver/1.20.1", KaiijuLatestCommitJson);
-        val KaiijuLatestCommit = gson.fromJson<paper.libs.com.google.gson.JsonObject>(KaiijuLatestCommitJson)["sha"].asString;
+        val FoliaLatestCommitJson = layout.cache.resolve("FoliaLatestCommit.json");
+        download.get().download("https://api.github.com/repos/PaperMC/Folia/commits/master", FoliaLatestCommitJson);
+        val FoliaLatestCommit = gson.fromJson<paper.libs.com.google.gson.JsonObject>(FoliaLatestCommitJson)["sha"].asString;
 
         copy {
             from(file)
             into(tempDir)
             filter { line: String ->
-                line.replace("kaiijuRef=.*".toRegex(), "kaiijuRef=$KaiijuLatestCommit")
+                line.replace("FoliaRef=.*".toRegex(), "FoliaRef=$FoliaLatestCommit")
             }
         }
     }
