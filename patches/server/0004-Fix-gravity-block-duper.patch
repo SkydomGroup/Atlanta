@@ -43,6 +43,6 @@ index 9447d8efece67e6c969d8fbaf111a9b29f249058..c383527124b24ea63538bca99ecde46f
  
      private void gameplaySettings() {
          safeTeleporting = getBoolean("settings.safe-teleportation", safeTeleporting);
-+        gravityblockDuper = getBoolean("settings.gravity-block-Duper",gravityblockDuper);
++        gravityblockDuper = getBoolean("settings.gravity-block-duper",gravityblockDuper);
      }
  }
