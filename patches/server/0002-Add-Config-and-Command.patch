@@ -121,7 +121,7 @@ index daed278d1bcf84ee42749f24e311b22b70015d79..6ed1878f0812e41684c2d0b5bbcbacad
                          .withRequiredArg()
 diff --git a/src/main/java/org/skydom/chosen/server/AtlantaConfig.java b/src/main/java/org/skydom/chosen/server/AtlantaConfig.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..acc4ef9cdb9c506ca222393e810d1d67712520e8
+index 0000000000000000000000000000000000000000..c18696fd08827f15dd27b3bdd9f10238e1c1761d
 --- /dev/null
 +++ b/src/main/java/org/skydom/chosen/server/AtlantaConfig.java
 @@ -0,0 +1,191 @@
@@ -183,11 +183,11 @@ index 0000000000000000000000000000000000000000..acc4ef9cdb9c506ca222393e810d1d67
 +        config.options().copyDefaults(true);
 +        verbose = getBoolean("verbose", false);
 +
-+        commands = new HashMap<>();
-+        commands.put("atlanta", new AtlantaCommand("atlanta"));
-+
 +        version = getInt("config-version", 1);
 +        set("config-version", 1);
++
++        commands = new HashMap<>();
++        commands.put("atlanta", new AtlantaCommand("atlanta"));
 +
 +        readConfig(AtlantaConfig.class, null, setup);
 +    }
