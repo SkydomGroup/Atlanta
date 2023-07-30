@@ -14,7 +14,7 @@ index 34b3541603b8cca16c7d62f3981d7ce3e8be0dbe..5fac67b54f4ad0f898d1fbe0a39fd19f
          // Paper start - fix sand duping
 -        if (this.isRemoved()) {
 +        // Atlanta start - Fix gravity block duper
-+        if (!this.level().atlantaConfig.gravityblockDuper && this.isRemoved()) { // 配置文件中"gravityblockDuper"，设置为true，则不执行此代码，即开启重力方块复制。
++        if (!this.level().atlantaConfig.gravityblockDuper && this.isRemoved()) { // 配置文件中"gravity-block-duper"，设置为true，则不执行此代码，即开启重力方块复制。
              return;
 +        // Atlanta end - Fix gravity block duper
          }
@@ -26,7 +26,7 @@ index 34b3541603b8cca16c7d62f3981d7ce3e8be0dbe..5fac67b54f4ad0f898d1fbe0a39fd19f
              // Paper start - fix sand duping
 -            if (this.isRemoved()) {
 +            // Atlanta start - Fix gravity block duper
-+            if (!this.level().atlantaConfig.gravityblockDuper && this.isRemoved()) { // 配置文件中"gravityblockDuper"，设置为true，则不执行此代码，即开启重力方块复制。
++            if (!this.level().atlantaConfig.gravityblockDuper && this.isRemoved()) { // 配置文件中"gravity-block-duper"，设置为true，则不执行此代码，即开启重力方块复制。
 +            // Atlanta end - Fix gravity block duper
                  return;
              }
