@@ -26,7 +26,7 @@
 ### How to use it?
 
 #### The first method.
-* Download the compiled jar from [Actions](https://GitHub.com/SkydomGroup/Atlanta/actions/workflows/build.yml).
+* Download the compiled Jar from [Actions](https://GitHub.com/SkydomGroup/Atlanta/actions/workflows/build.yml).
 
 #### The second approach.
 * Clone this repo.
