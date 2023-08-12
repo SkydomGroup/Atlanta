@@ -34,7 +34,7 @@ jobs:
           title: "Build #${{ env.workflow }}"
           automatic_release_tag: latest-${{ env.version }}
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
-          files: build/libs/atlanta-paperclip-*-reobf.jar
+          files: build/libs/Atlanta-paperclip-*-reobf.jar
           prerelease: false
       - name: Release Paperclip (History)
         if: github.ref_name == env.branch
@@ -43,5 +43,5 @@ jobs:
           title: "Build #${{ env.workflow }}"
           automatic_release_tag: build-${{ env.workflow }}
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
-          files: build/libs/atlanta-paperclip-*-reobf.jar
+          files: build/libs/Atlanta-paperclip-*-reobf.jar
           prerelease: false
