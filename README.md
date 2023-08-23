@@ -5,7 +5,7 @@
     <p>A fork of <a href="https://GitHub.com/PaperMC/Folia">Folia</a> that modifies functions prohibited by Folia.</p>
 </div>
 
-[![Atlanta CI](https://GitHub.com/SkydomGroup/Atlanta/actions/workflows/build.yml/badge.svg)](https://GitHub.com/SkydomGroup/Atlanta/actions/workflows/build.yml/)
+[![Atlanta CI](https://GitHub.com/SkydomGroup/Atlanta/actions/workflows/Release.yml/badge.svg)](https://github.com/SkydomGroup/Atlanta/releases)
 
 ## English
 
@@ -26,7 +26,7 @@
 ### How to use it?
 
 #### The first method.
-* Download the compiled Jar from [Actions](https://GitHub.com/SkydomGroup/Atlanta/actions/workflows/build.yml).
+* Download the compiled Jar from [Release](https://github.com/SkydomGroup/Atlanta/releases).
 
 #### The second approach.
 * Clone this repo.
@@ -53,7 +53,7 @@
 ### 我该如何使用它？
 
 #### 第一种办法。
-* 到 [Actions](https://GitHub.com/SkydomGroup/Atlanta/actions/workflows/build.yml) 去下载编译好的Jar。
+* 到 [Release](https://github.com/SkydomGroup/Atlanta/releases) 去下载编译好的Jar。
 
 #### 第二种办法。
 * 克隆这个存储库。
